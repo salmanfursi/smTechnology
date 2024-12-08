@@ -1,0 +1,87 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  ADMIN
+  TRAINER
+  TRAINEE
+}
+
+enum ClassStatus {
+  ACTIVE
+  FULL
+  CANCELLED
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  PENDING
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole
+  isActive  Boolean  @default(true)
+  
+  trainer   Trainer?
+  trainee   Trainee?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trainer {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @unique @db.ObjectId
+  user           User     @relation(fields: [userId], references: [id])
+  specialization String
+  contactNumber  String
+  
+  classSchedules ClassSchedule[]
+}
+
+model Trainee {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @unique @db.ObjectId
+  user               User     @relation(fields: [userId], references: [id])
+  fitnessGoals       String?
+  medicalConditions  String?
+  
+  classBookings      ClassBooking[]
+}
+
+model ClassSchedule {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  trainerId        String         @db.ObjectId
+  trainer          Trainer        @relation(fields: [trainerId], references: [id])
+  
+  scheduleDate     DateTime
+  startTime        DateTime
+  endTime          DateTime
+  maxParticipants  Int            @default(10)
+  status           ClassStatus    @default(ACTIVE)
+  
+  classBookings    ClassBooking[]
+}
+
+model ClassBooking {
+  id               String         @id @default(auto()) @map("_id") @db.ObjectId
+  traineeId        String         @db.ObjectId
+  trainee          Trainee        @relation(fields: [traineeId], references: [id])
+  
+  classScheduleId  String         @db.ObjectId
+  classSchedule    ClassSchedule  @relation(fields: [classScheduleId], references: [id])
+  
+  bookingDate      DateTime       @default(now())
+  status           BookingStatus  @default(CONFIRMED)
+}
