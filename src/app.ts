@@ -3,6 +3,7 @@ import cors from 'cors';
 
 // Import routes
 import authRoutes from './modules/auth/auth.route';
+import trainerRoutes from './modules/trainer/trainer.route';
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/trainer', trainerRoutes);
+
 
 // Global error handler
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {

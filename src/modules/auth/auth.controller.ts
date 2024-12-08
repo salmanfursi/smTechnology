@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
+import { clearScreenDown } from 'readline';
 
 const authService = new AuthService();
 
 export class AuthController {
   async register(req: Request, res: Response) {
-    try {
+     try {
       const user = await authService.register(req.body);
       res.status(201).json({
         success: true,
