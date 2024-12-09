@@ -3,6 +3,7 @@ import cors from 'cors';
 
 // Import routes
 import authRoutes from './modules/auth/auth.route';
+import trainerRoutes from './modules/trainer/trainer.route';
 
 const app = express();
 
