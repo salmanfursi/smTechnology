@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ClassScheduleController } from './classSchedule.controller';
-import { authenticateJWT, authorizeRoles } from '../../middlewares/auth.middleware';
+import { authenticateJWT, authorizeRoles } from '../../middleware/auth.middleware';
+// import { authenticateJWT, authorizeRoles } from '../../middlewares/auth.middleware';
 
 const router = Router();
 const classScheduleController = new ClassScheduleController();
